@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:min-height="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout.html}">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <title>Edit Volunteer</title>
+
+</head>
+<body >
+<div layout:fragment="content" th:remove="tag">
+    <div class="panel panel-default">
+        <div class="panel-heading" >
+            <br>
+            <p class="h4 mb-4">&emsp;<b>Edit Volunteer</b></p>
+        </div>
+        <div class="col-sm-6 col-sm-offset-3">
+            <form th:object="${volunteer}" th:action="@{../saveEdit}"  method="POST" >
+                <input type="hidden"  th:field="*{id}"/>
+                  <input type="text" class="form-control mb-4 col-4" id="name" th:field="*{name}" placeholder="Name"/>
+                <select class="form-control mb-4 col-4" th:field="*{event.eventName}" >
+                        <option value="">Select Event</option>
+                        <option th:each="event : ${eventList}"
+                                th:value="${event.eventName}"
+                                th:text="${event.eventName}">
+                        </option>
+                    </select>
+                   <input type="text" class="form-control mb-4 col-4" id="email" th:field="*{email}"
+                           placeholder="Email"/>
+                     <input type="text" class="form-control mb-4 col-4" id="city" th:field="*{city}" placeholder="City"/>
+                <button type="submit" class="btn btn-primary" value="Save">Save</button>
+                <a class="btn btn-danger" th:href="@{/volunteers}">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
