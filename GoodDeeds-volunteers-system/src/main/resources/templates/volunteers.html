@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:User="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout.html}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+</head>
+<body >
+
+<div layout:fragment="content" th:remove="tag">
+    <br>
+    <h2 align="center"><strong>Charity Volunteers</strong></h2>
+    <br>
+    <div sec:authorize="isAuthenticated()" align="center">
+        <b>Welcome</b> <b><span sec:authentication="name">Username</span></b>
+        &nbsp;
+        <i><span sec:authentication="principal.authorities">Roles</span></i>
+    </div>
+
+    <div class="panel panel-default">
+        <a href="/volunteers/add" class="btn btn-primary btn-sm mb-3" sec:authorize="hasRole('ADMIN')">Add Volunteer</a>
+        <br><br>
+        <div class="panel-heading">
+            <table class="table table-bordered table-striped" id="eventTable">
+                <thead class="thead-dark">
+                <tr class="success">
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>City</th>
+                    <th>Donation Event</th>
+                    <th sec:authorize="hasRole('ADMIN')">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="volunteer : ${volunteerPage.content}" id="volunteers" class="success">
+                    <td class="volunteername" th:text="${volunteer.name}"></td>
+                    <td th:text="${volunteer.email}"></td>
+                    <td th:text="${volunteer.city}"></td>
+                    <td th:text="${volunteer.event.eventName}"></td>
+
+                    <td sec:authorize="hasRole('ADMIN')">
+
+                        <a th:href="@{volunteers/delete/{id}(id=${volunteer.id})}" class="btn btn-danger btn-sm">Delete</a>
+                        <a th:href="@{volunteers/edit/{id}(id=${volunteer.id})}" class="btn btn-primary btn-sm">Edit</a>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <br>
+            <a th:href="@{/logout}" class="btn btn-dark" align="center">Log out</a>
+            <br><br>
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center" >
+                    <li th:class="${volunteerPage.number eq 0} ? 'hidden': 'page-item'" style="padding-right:2em">
+                        <a th:if="${volunteerPage.number>0}"th:href="@{/volunteers(size=${volunteerPage.size}, page=${volunteerPage.number})}"
+                           class="page-link" href="#" aria-label="Previous" id="previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:each="pageNumber : ${pageNumbers}"style="padding-right:2em" >
+                        <a th:href="@{/volunteers(size=${volunteerPage.size}, page=${pageNumber})}"
+                           th:text=${pageNumber}
+                           th:class="${pageNumber==volunteerPage.number + 1} ? active"
+                        ></a>
+                    </li>
+                    <li th:class="${volunteerPage.number+1 == volunteerPage.totalPages} ? 'hidden' : 'page-item'"
+                        >
+                        <a class="page-link"
+                           th:href="@{/volunteers(size=${volunteerPage.size}, page=${volunteerPage.number + 2})}"
+                           aria-label="Next" id="next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
